@@ -1,0 +1,17 @@
+//
+// Prefix header for all source files of the 'iphone' target in the 'iphone' project
+//
+#import <Availability.h>
+
+#ifndef __IPHONE_4_0
+#warning "This project uses features only available in iOS SDK 4.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <UIKit/UIKit.h>
+#endif
+
+#ifdef __cplusplus
+	#include "cocos2d.h"
+#endif
