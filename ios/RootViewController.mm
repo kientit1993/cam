@@ -27,6 +27,7 @@
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
 
+#import "HelloWorldScene.h"
 
 @implementation RootViewController
 
@@ -61,25 +62,39 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //self.videoCamera = [[CvVideoCamera alloc] initWithParentView:imageView];
-    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
+    
+    UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    camView.backgroundColor=[UIColor clearColor];
+    [self.view addSubview:camView];
+    self.videoCamera = [[CvVideoCamera alloc] initWithParentView:camView];
+    self.videoCamera.delegate = self;
+    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
     self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
+    self.videoCamera.grayscaleMode = YES;
     [self.videoCamera start];
 }
 
+- (void)myObjectiveCMethod:(cv::Mat&) anh1: (cv::Mat&) anh2;
+{
+    HelloWorld:HelloWorld::donothing(anh1, anh2);
+}
 
 - (void)processImage:(cv::Mat&)image;
 {
-    //cv::Mat image_copy;
-    //cv::cvtColor(image, img, cv::COLOR_GRAY2BGR);
-    //img= image.clone();
+    cv::Mat image_copy;
+    cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
+    [self myObjectiveCMethod:image_copy:image];
+    img= image.clone();
+    NSLog(@"Kien");
+    NSLog(@"img = %d",img.cols);
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+       
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

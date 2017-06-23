@@ -26,6 +26,12 @@
 #import <opencv2/videoio/cap_ios.h>
 #import <opencv2/imgproc/types_c.h>
 #import <opencv2/imgproc/imgproc.hpp>
+#import <HelloWorldScene.h>
+
+using namespace std;
+using namespace cv;
+
+
 @interface RootViewController : UIViewController<CvVideoCameraDelegate>
 {
     
@@ -38,5 +44,7 @@ CvVideoCamera* videoCamera;
 
 @property (nonatomic, retain) CvVideoCamera* videoCamera;
 
+
+- (void)myObjectiveCMethod:(cv::Mat&) anh1:(cv::Mat&) anh2;
 
 @end
