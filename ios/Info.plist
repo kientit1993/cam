@@ -10,6 +10,8 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string>Icon-57.png</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.org.demos</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon-29</string>
@@ -46,8 +48,6 @@
 		<string>Icon-152</string>
 		<string>Icon-180</string>
 	</array>
-	<key>CFBundleIdentifier</key>
-	<string>com.phamkien.hello</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -62,45 +62,7 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>${PRODUCT_NAME} Music Usage</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>${PRODUCT_NAME} BluetoothPeripheral</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>${PRODUCT_NAME} Calendar Usage</string>
-	<key>NSCameraUsageDescription</key>
-	<string>${PRODUCT_NAME} Camera Usage</string>
-	<key>NSContactsUsageDescription</key>
-	<string>${PRODUCT_NAME} Contact fetch</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>${PRODUCT_NAME} Health Description</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>${PRODUCT_NAME} Health Updates</string>
-	<key>NSHomeKitUsageDescription</key>
-	<string>${PRODUCT_NAME} HomeKit Usage</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>${PRODUCT_NAME} Use location always</string>
-	<key>NSLocationUsageDescription</key>
-	<string>${PRODUCT_NAME} Location Updates</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>${PRODUCT_NAME} WhenInUse Location</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>${PRODUCT_NAME} Microphone Usage</string>
-	<key>NSMotionUsageDescription</key>
-	<string>${PRODUCT_NAME} Motion Usage</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>${PRODUCT_NAME} PhotoLibrary Usage</string>
-	<key>NSRemindersUsageDescription</key>
-	<string>${PRODUCT_NAME} Reminder Usage</string>
-	<key>NSSiriUsageDescription</key>
-	<string>${PRODUCT_NAME} Siri Usage</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>${PRODUCT_NAME} Speech Recognition Usage</string>
-	<key>NSVideoSubscriberAccountUsageDescription</key>
-	<string>${PRODUCT_NAME} Video Subscribe Usage</string>
 	<key>UIAppFonts</key>
-	<array/>
-	<key>UIBackgroundModes</key>
 	<array/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
@@ -109,7 +71,41 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
-	<key>kTCCServiceMediaLibrary</key>
-	<string>${PRODUCT_NAME} MediaLibrary Usage</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>${PRODUCT_NAME} Music Usage</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>${PRODUCT_NAME} BluetoothPeripheral</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>${PRODUCT_NAME} Calendar Usage</string>
+    <key>NSCameraUsageDescription</key>
+    <string>${PRODUCT_NAME} Camera Usage</string>
+    <key>NSContactsUsageDescription</key>
+    <string>${PRODUCT_NAME} Contact fetch</string>
+    <key>NSHealthShareUsageDescription</key>
+    <string>${PRODUCT_NAME} Health Description</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>${PRODUCT_NAME} Health Updates</string>
+    <key>NSHomeKitUsageDescription</key>
+    <string>${PRODUCT_NAME} HomeKit Usage</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>${PRODUCT_NAME} Use location always</string>
+    <key>NSLocationUsageDescription</key>
+    <string>${PRODUCT_NAME} Location Updates</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>${PRODUCT_NAME} WhenInUse Location</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>${PRODUCT_NAME} Microphone Usage</string>
+    <key>NSMotionUsageDescription</key>
+    <string>${PRODUCT_NAME} Motion Usage</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>${PRODUCT_NAME} PhotoLibrary Usage</string>
+    <key>NSRemindersUsageDescription</key>
+    <string>${PRODUCT_NAME} Reminder Usage</string>
+    <key>NSSiriUsageDescription</key>
+    <string>${PRODUCT_NAME} Siri Usage</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>${PRODUCT_NAME} Speech Recognition Usage</string>
+    <key>NSVideoSubscriberAccountUsageDescription</key>
+    <string>${PRODUCT_NAME} Video Subscribe Usage</string>
 </dict>
 </plist>

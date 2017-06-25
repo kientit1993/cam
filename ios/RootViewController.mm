@@ -27,7 +27,6 @@
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
 
-#import "HelloWorldScene.h"
 
 @implementation RootViewController
 
@@ -62,7 +61,6 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     camView.backgroundColor=[UIColor clearColor];
     [self.view addSubview:camView];
@@ -76,25 +74,28 @@
     [self.videoCamera start];
 }
 
-- (void)myObjectiveCMethod:(cv::Mat&) anh1: (cv::Mat&) anh2;
-{
-    HelloWorld:HelloWorld::donothing(anh1, anh2);
-}
-
 - (void)processImage:(cv::Mat&)image;
 {
     cv::Mat image_copy;
     cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
-    [self myObjectiveCMethod:image_copy:image];
     img= image.clone();
     NSLog(@"Kien");
     NSLog(@"img = %d",img.cols);
+    
+    auto texture = new cocos2d::Texture2D(); // Texture to store the frame
+    texture->initWithData(image.data,
+                         image.elemSize() * image.cols * image.rows,
+                         cocos2d::Texture2D::PixelFormat::RGB888,
+                         image.cols,
+                         image.rows,
+                         cocos2d::Size(image.cols, image.rows));
+
+    HelloWorld::sprite->setTexture(texture);
     
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-       
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

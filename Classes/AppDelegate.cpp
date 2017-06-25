@@ -59,9 +59,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("hello", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("demos", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
-        glview = GLViewImpl::create("hello");
+        glview = GLViewImpl::create("demos");
 #endif
         director->setOpenGLView(glview);
     }
@@ -92,11 +92,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     register_all_packages();
-    
 
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
-    
 
     // run
     director->runWithScene(scene);
