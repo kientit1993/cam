@@ -61,41 +61,43 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 160, 160)];
     camView.backgroundColor=[UIColor clearColor];
     [self.view addSubview:camView];
     self.videoCamera = [[CvVideoCamera alloc] initWithParentView:camView];
     self.videoCamera.delegate = self;
     self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
-    self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
+    //self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
-    self.videoCamera.defaultFPS = 30;
-    self.videoCamera.grayscaleMode = YES;
+    self.videoCamera.defaultFPS = 60;
+    self.videoCamera.grayscaleMode = NO;
+    self.videoCamera.rotateVideo = YES;
     [self.videoCamera start];
 }
 
 - (void)processImage:(cv::Mat&)image;
 {
     cv::Mat image_copy;
-    cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
+    //cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
     img= image.clone();
     NSLog(@"Kien");
     NSLog(@"img = %d",img.cols);
-    if(HelloWorld::sprite != nullptr)
+    MyClass::startCap(image);
+    /*if (HelloWorld::sprite != nullptr)
     {
         auto texture = new cocos2d::Texture2D(); // Texture to store the frame
         texture->initWithData(image.data,
-                             image.elemSize() * image.cols * image.rows,
-                             cocos2d::Texture2D::PixelFormat::RGB888,
-                             image.cols,
-                             image.rows,
-                             cocos2d::Size(image.cols, image.rows));
-        
+                         image.elemSize() * image.cols * image.rows,
+                         cocos2d::Texture2D::PixelFormat::RGB888,
+                         image.cols,
+                         image.rows,
+                         cocos2d::Size(image.cols, image.rows));
+    
         HelloWorld::setTexture(texture);
     }
 
     //HelloWorld:HelloWorld::sprite->setTexture(texture);
-    //HelloWorld::sprite->setTextureRect(cocos2d::Rect(0,0,160,320));
+    //HelloWorld::sprite->setTextureRect(cocos2d::Rect(0,0,160,320));*/
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -4,14 +4,65 @@
 USING_NS_CC;
 
 cocos2d::Sprite* HelloWorld::sprite = nullptr;
-
+cv::Mat MyClass::img;
 Scene* HelloWorld::createScene()
 {
     return HelloWorld::create();
 }
+
+Sprite* MyClass::createSprite()
+{
+    return MyClass::create();
+}
+void MyClass::startCap(cv::Mat image)
+{
+    img = image.clone();
+}
+
+void MyClass::UpdateCamtxture()
+{
+    
+    txture->initWithData(img.data,
+                          img.elemSize() * img.cols * img.rows,
+                          cocos2d::Texture2D::PixelFormat::RGB888,
+                          img.cols,
+                          img.rows,
+                          cocos2d::Size(img.cols, img.rows));
+    HelloWorld::sprite->setTexture(MyClass::txture);
+    if (HelloWorld::sprite == nullptr)
+    {
+        CCLOG("sprite null");
+    }
+    CCLOG("c++ image: %d", img.cols);
+    HelloWorld::sprite->setTextureRect(cocos2d::Rect(160,160,256,256));
+}
+
+void MyClass::stopCap()
+{
+    unscheduleUpdate();
+}
+
+void MyClass::update(float delta)
+{
+    Sprite::update(delta);
+    UpdateCamtxture();
+}
+
+bool MyClass::init()
+{
+    HelloWorld::sprite->createWithTexture(MyClass::txture);
+    CCLOG("Kien");
+    this->scheduleUpdate();
+    return true;
+}
+
 void HelloWorld::setTexture(cocos2d::Texture2D *texture)
 {
     sprite->setTexture(texture);
+    Rect rect = Rect::ZERO;
+    rect.size = texture->getContentSize();
+    sprite->setTextureRect(rect);
+    CCLOG("rect size = %f %f", rect.size.height, rect.size.width);
 }
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
@@ -58,13 +109,15 @@ bool HelloWorld::init()
 
     // add the label as a child to this layer
     this->addChild(label, 1);*/
-    sprite = cocos2d::Sprite::create("HelloWorld.png");
+    MyClass* myclass = new MyClass();
+    
+    //sprite = cocos2d::Sprite::create();
     // add "HelloWorld" splash screen"   
     // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
+    this->addChild(myclass, 0);
     
     return true;
 }
