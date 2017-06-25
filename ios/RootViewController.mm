@@ -81,7 +81,7 @@
     img= image.clone();
     NSLog(@"Kien");
     NSLog(@"img = %d",img.cols);
-    if(HelloWorld:HelloWorld::sprite != nullptr)
+    if(HelloWorld::sprite != nullptr)
     {
         auto texture = new cocos2d::Texture2D(); // Texture to store the frame
         texture->initWithData(image.data,

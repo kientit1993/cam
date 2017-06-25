@@ -58,7 +58,7 @@ bool HelloWorld::init()
 
     // add the label as a child to this layer
     this->addChild(label, 1);*/
-    sprite = cocos2d::Sprite::create();
+    sprite = cocos2d::Sprite::create("HelloWorld.png");
     // add "HelloWorld" splash screen"   
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
