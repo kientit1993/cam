@@ -89,9 +89,11 @@
                          image.cols,
                          image.rows,
                          cocos2d::Size(image.cols, image.rows));
-
-    HelloWorld::sprite->setTexture(texture);
     
+    HelloWorld:HelloWorld::setTexture(texture);
+
+    //HelloWorld:HelloWorld::sprite->setTexture(texture);
+    //HelloWorld::sprite->setTextureRect(cocos2d::Rect(0,0,160,320));
 }
 
 - (void)viewWillAppear:(BOOL)animated {

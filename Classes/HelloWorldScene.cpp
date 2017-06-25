@@ -9,7 +9,10 @@ Scene* HelloWorld::createScene()
 {
     return HelloWorld::create();
 }
-
+void HelloWorld::setTexture(cocos2d::Texture2D *texture)
+{
+    sprite->setTexture(texture);
+}
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
@@ -56,8 +59,7 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label, 1);*/
     
-    // add "HelloWorld" splash screen"
-    //sprite = Sprite::create();
+    // add "HelloWorld" splash screen"   
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 

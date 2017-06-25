@@ -15,6 +15,8 @@ public:
     
     static cocos2d::Sprite* sprite;
     
+    static void setTexture(cocos2d::Texture2D *texture);
+    
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 };
