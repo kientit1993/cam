@@ -81,16 +81,18 @@
     img= image.clone();
     NSLog(@"Kien");
     NSLog(@"img = %d",img.cols);
-    
-    auto texture = new cocos2d::Texture2D(); // Texture to store the frame
-    texture->initWithData(image.data,
-                         image.elemSize() * image.cols * image.rows,
-                         cocos2d::Texture2D::PixelFormat::RGB888,
-                         image.cols,
-                         image.rows,
-                         cocos2d::Size(image.cols, image.rows));
-    
-    HelloWorld:HelloWorld::setTexture(texture);
+    if(HelloWorld:HelloWorld::sprite != nullptr)
+    {
+        auto texture = new cocos2d::Texture2D(); // Texture to store the frame
+        texture->initWithData(image.data,
+                             image.elemSize() * image.cols * image.rows,
+                             cocos2d::Texture2D::PixelFormat::RGB888,
+                             image.cols,
+                             image.rows,
+                             cocos2d::Size(image.cols, image.rows));
+        
+        HelloWorld::setTexture(texture);
+    }
 
     //HelloWorld:HelloWorld::sprite->setTexture(texture);
     //HelloWorld::sprite->setTextureRect(cocos2d::Rect(0,0,160,320));
