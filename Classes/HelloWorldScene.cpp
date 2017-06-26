@@ -4,8 +4,8 @@
 USING_NS_CC;
 
 std::mutex HelloWorld::s_mtx_change_texture;
-cocos2d::Texture2D *HelloWorld::_m_texture2D = nullptr;
 bool HelloWorld::s_dirty = false;
+cv::Mat HelloWorld::img;
 
 
 Scene* HelloWorld::createScene()
@@ -60,6 +60,9 @@ bool HelloWorld::init()
     this->addChild(label, 1);
 
     // add "HelloWorld" splash screen"
+    //_m_sprite = Sprite::create("HelloWorld.png");
+    
+
     _m_sprite = Sprite::create("HelloWorld.png");
     
     // position the _m_sprite on the center of the screen
@@ -86,8 +89,8 @@ bool HelloWorld::init()
                 }
                 // sleep 33 ms. Equivalent with 30 fps
                 std::this_thread::sleep_for(std::chrono::milliseconds(33));
-
-            }
+ 
+     }
 
         });
 
@@ -129,10 +132,7 @@ void HelloWorld::update(float dt)
         s_dirty = false;
         std::lock_guard<std::mutex> lock(s_mtx_change_texture);
         //_m_texture2D->initWithImage(_m_image);
-        _m_sprite->setTexture(_m_texture2D);
+        _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
 
-        Rect rect = Rect::ZERO;
-        rect.size = _m_sprite->getTexture()->getContentSize();
-        _m_sprite->setTextureRect(rect);
     }
 }
