@@ -4,7 +4,7 @@
 USING_NS_CC;
 
 std::mutex HelloWorld::s_mtx_change_texture;
-cocos2d::Texture2D *HelloWorld::_m_texture2D;
+cocos2d::Texture2D *HelloWorld::_m_texture2D = nullptr;
 bool HelloWorld::s_dirty = false;
 
 
