@@ -5,7 +5,7 @@ USING_NS_CC;
 
 std::mutex HelloWorld::s_mtx_change_texture;
 cocos2d::Texture2D *HelloWorld::_m_texture2D;
-bool s_dirty = false;
+bool HelloWorld::s_dirty = false;
 
 
 Scene* HelloWorld::createScene()
@@ -124,8 +124,9 @@ void HelloWorld::update(float dt)
 {
     cocos2d::Scene::update(dt);
 
-    //if(s_dirty)
+    if(s_dirty)
     {
+        s_dirty = false;
         std::lock_guard<std::mutex> lock(s_mtx_change_texture);
         //_m_texture2D->initWithImage(_m_image);
         _m_sprite->setTexture(_m_texture2D);

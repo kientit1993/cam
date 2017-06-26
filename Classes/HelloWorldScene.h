@@ -29,6 +29,7 @@ public:
     cocos2d::Sprite *_m_sprite;
     static cocos2d::Texture2D *_m_texture2D;
     cocos2d::Image *_m_image;
+    static bool s_dirty;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

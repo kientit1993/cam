@@ -91,6 +91,8 @@
                          image.rows,
                          cocos2d::Size(image.cols, image.rows));
     
+    HelloWorld::s_dirty = true;
+    
     
 }
 
