@@ -69,7 +69,7 @@
     self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
     //self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
-    self.videoCamera.defaultFPS = 60;
+    self.videoCamera.defaultFPS = 30;
     self.videoCamera.grayscaleMode = NO;
     self.videoCamera.rotateVideo = YES;
     [self.videoCamera start];
@@ -77,27 +77,16 @@
 
 - (void)processImage:(cv::Mat&)image;
 {
-    cv::Mat image_copy;
-    //cv::cvtColor(image, image_copy, cv::COLOR_GRAY2BGR);
-    img= image.clone();
-    NSLog(@"Kien");
-    NSLog(@"img = %d",img.cols);
-    MyClass::startCap(image);
-    /*if (HelloWorld::sprite != nullptr)
-    {
-        auto texture = new cocos2d::Texture2D(); // Texture to store the frame
-        texture->initWithData(image.data,
+    //auto texture = new cocos2d::Texture2D(); // Texture to store the frame
+    
+    HelloWorld::_m_texture2D->initWithData(image.data,
                          image.elemSize() * image.cols * image.rows,
                          cocos2d::Texture2D::PixelFormat::RGB888,
                          image.cols,
                          image.rows,
                          cocos2d::Size(image.cols, image.rows));
     
-        HelloWorld::setTexture(texture);
-    }
-
-    //HelloWorld:HelloWorld::sprite->setTexture(texture);
-    //HelloWorld::sprite->setTextureRect(cocos2d::Rect(0,0,160,320));*/
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
