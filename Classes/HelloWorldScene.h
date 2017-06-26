@@ -25,6 +25,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
     
+    static std::mutex s_mtx_change_texture;
     cocos2d::Sprite *_m_sprite;
     static cocos2d::Texture2D *_m_texture2D;
     cocos2d::Image *_m_image;

@@ -78,6 +78,11 @@
 - (void)processImage:(cv::Mat&)image;
 {
     //auto texture = new cocos2d::Texture2D(); // Texture to store the frame
+    std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
+    if (HelloWorld::_m_texture2D == nullptr)
+    {
+        HelloWorld::_m_texture2D = new cocos2d::Texture2D();
+    }
     
     HelloWorld::_m_texture2D->initWithData(image.data,
                          image.elemSize() * image.cols * image.rows,

@@ -3,7 +3,7 @@
 
 USING_NS_CC;
 
-static std::mutex s_mtx_change_texture;
+std::mutex HelloWorld::s_mtx_change_texture;
 cocos2d::Texture2D *HelloWorld::_m_texture2D;
 bool s_dirty = false;
 
@@ -70,7 +70,7 @@ bool HelloWorld::init()
 
     scheduleUpdate();
 
-    static bool l_is_running = true;
+    /*static bool l_is_running = true;
     static std::thread l_th_process_image([=]()
         {
             _m_image = new cocos2d::Image();
@@ -97,7 +97,7 @@ bool HelloWorld::init()
         l_th_process_image.join();
     });
 
-    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(l_listener, 1);
+    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(l_listener, 1);*/
 
     return true;
 }
@@ -124,7 +124,7 @@ void HelloWorld::update(float dt)
 {
     cocos2d::Scene::update(dt);
 
-    if(s_dirty)
+    //if(s_dirty)
     {
         std::lock_guard<std::mutex> lock(s_mtx_change_texture);
         //_m_texture2D->initWithImage(_m_image);
