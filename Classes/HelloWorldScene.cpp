@@ -50,7 +50,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-    auto label = Label::createWithTTF("damn!", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("demos!", "fonts/Marker Felt.ttf", 24);
 
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -123,6 +123,19 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 }
 
+
+void HelloWorld::convertRGBA8888ToBGRA(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+{
+    unsigned short* out16 = (unsigned short*)outData;
+    for (ssize_t i = 0, l = dataLen - 3; i < l; i += 4)
+    {
+        outData[i] = 1;
+        outData[i+1] = 2;
+        outData[i + 2] = 3;
+        outData[i + 3] = 4;
+    }
+}
+
 void HelloWorld::update(float dt)
 {
     cocos2d::Scene::update(dt);
@@ -131,8 +144,40 @@ void HelloWorld::update(float dt)
     {
         s_dirty = false;
         std::lock_guard<std::mutex> lock(s_mtx_change_texture);
-        //_m_texture2D->initWithImage(_m_image);
-        _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
+        if (_m_texture2d == nullptr)
+        {
+            _m_texture2d = new cocos2d::Texture2D();
+            /*cv::Mat image;
+            if (img.data != NULL )
+            {
+            convertRGBA8888ToBGRA(img.data, img.elemSize() * img.cols * img.rows, image.data);
+            }*/
+            _m_texture2d->initWithData(img.data,
+                                       img.elemSize() * img.cols * img.rows,
+                                       cocos2d::Texture2D::PixelFormat::RGBA8888,
+                                       img.cols,
+                                       img.rows,
+                                       cocos2d::Size(img.cols, img.rows));
+            
+            _m_sprite->setTexture(_m_texture2d);
+            
+        }
+        else
+        {
+             //cv::Mat image;
+             //if (img.data != NULL )
+             //{
+             //convertRGBA8888ToBGRA(img.data, img.elemSize() * img.cols * img.rows, image.data);
+             //}
+            _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
+        }
 
+        Rect rect = Rect::ZERO;
+        rect.size = _m_sprite->getTexture()->getContentSize();
+        _m_sprite->setTextureRect(rect);
+        _m_sprite->setRotation(-90);
+        _m_sprite->getColor();
+        _m_sprite->setColor(Color3B(Color4B(255,255,255,255)));
+        
     }
 }

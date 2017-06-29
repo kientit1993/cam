@@ -58,10 +58,11 @@
     self.view = eaglView;
 }
 
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 160, 160)];
+    UIView *camView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 150)];
     camView.backgroundColor=[UIColor clearColor];
     [self.view addSubview:camView];
     self.videoCamera = [[CvVideoCamera alloc] initWithParentView:camView];
@@ -77,9 +78,29 @@
 
 - (void)processImage:(cv::Mat&)image;
 {
+    //auto texture = new cocos2d::Texture2D(); // Texture to store the frame
+    /*std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
+    if (HelloWorld::_m_texture2D == nullptr)
+    {
+        HelloWorld::_m_texture2D = new cocos2d::Texture2D();
+    }
+    static cv::Mat image_copy;
+
+    image.copyTo(image_copy);
+    
+    HelloWorld::_m_texture2D->initWithData(image_copy.data,
+                         image_copy.elemSize() * image_copy.cols * image_copy.rows,
+                         cocos2d::Texture2D::PixelFormat::RGB888,
+                         image_copy.cols,
+                         image_copy.rows,
+                         cocos2d::Size(image_copy.cols, image_copy.rows));
+    
+    HelloWorld::s_dirty = true;*/
+    
     std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
     HelloWorld::img = image.clone();
     HelloWorld::s_dirty = true;
+    
     
     
 }
