@@ -70,39 +70,16 @@
     self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
     //self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
-    self.videoCamera.defaultFPS = 30;
+    self.videoCamera.defaultFPS = 60;
     self.videoCamera.grayscaleMode = NO;
     self.videoCamera.rotateVideo = YES;
     [self.videoCamera start];
 }
-
 - (void)processImage:(cv::Mat&)image;
 {
-    //auto texture = new cocos2d::Texture2D(); // Texture to store the frame
-    /*std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
-    if (HelloWorld::_m_texture2D == nullptr)
-    {
-        HelloWorld::_m_texture2D = new cocos2d::Texture2D();
-    }
-    static cv::Mat image_copy;
-
-    image.copyTo(image_copy);
-    
-    HelloWorld::_m_texture2D->initWithData(image_copy.data,
-                         image_copy.elemSize() * image_copy.cols * image_copy.rows,
-                         cocos2d::Texture2D::PixelFormat::RGB888,
-                         image_copy.cols,
-                         image_copy.rows,
-                         cocos2d::Size(image_copy.cols, image_copy.rows));
-    
-    HelloWorld::s_dirty = true;*/
-    
     std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
     HelloWorld::img = image.clone();
-    HelloWorld::s_dirty = true;
-    
-    
-    
+    HelloWorld::s_dirty = true;    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

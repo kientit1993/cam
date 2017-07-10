@@ -28,7 +28,6 @@ public:
     static std::mutex s_mtx_change_texture;
     cocos2d::Sprite *_m_sprite;
     cocos2d::Texture2D *_m_texture2d;
-    void convertRGBA8888ToBGRA(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
     static bool s_dirty;
     static cv::Mat img;
 };

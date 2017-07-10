@@ -45,5 +45,4 @@ using namespace cv;
 - (BOOL) prefersStatusBarHidden;
 
 @property (nonatomic, retain) CvVideoCamera* videoCamera;
-
 @end
