@@ -116,22 +116,11 @@ string detectNumber(const Mat &img, const std::string &path2) {
     // vecData[i]=im;
     cv::Mat res;
     
-    try
-    {
-        svm2 = svm2->load(path2);
-        if (svm2)
-        {
-            svm2->predict(crop, res);
-        }
-        else
-        {
-            throw std::runtime_error("NULL CMNR!");
-        }
-    }
-    catch (std::exception const &e)
-    {
-        CCLOG("predict err: %s", e.what());
-    }
+    svm2 = svm2->load(path2);
+    CCASSERT(svm2, "can not load xml file");
+    svm2->predict(crop, res);
+
+
     int i=0;
     //
     std::ostringstream ss;
