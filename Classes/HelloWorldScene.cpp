@@ -51,15 +51,8 @@ double median( cv::Mat channel )
 }
 
 
-string detectNumber(Mat img, char * path2) {
+string detectNumber(const Mat &img, const std::string &path2) {
     
-    //while (_l_running)
-    //{
-        //_l_running = false;
-        //if(HelloWorld::s_dirty)
-    //{
-        //HelloWorld::s_dirty = false;
-        //std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
     Mat imgx;
     img.copyTo(imgx);
     cvtColor(imgx, imgx, CV_RGB2GRAY);
@@ -119,19 +112,25 @@ string detectNumber(Mat img, char * path2) {
         
     }
     
-    
-    
     cv::Ptr<SVM> svm2 = SVM::create();
-    
-    svm2 = Algorithm::load<SVM>(path2);
-    
-    
     // vecData[i]=im;
     cv::Mat res;
     
-    try { svm2->predict(crop, res); }
+    try
+    {
+        svm2 = svm2->load(path2);
+        if (svm2)
+        {
+            svm2->predict(crop, res);
+        }
+        else
+        {
+            throw std::runtime_error("NULL CMNR!");
+        }
+    }
     catch (std::exception const &e)
-    { CCLOG("predict err: %s", e.what());
+    {
+        CCLOG("predict err: %s", e.what());
     }
     int i=0;
     //
@@ -149,8 +148,6 @@ string detectNumber(Mat img, char * path2) {
     std::string s(ss.str());
     
     return s.c_str();
-    //}
-    //}
 }
 
 Scene* HelloWorld::createScene()
@@ -215,6 +212,8 @@ bool HelloWorld::init()
     // position the _m_sprite on the center of the screen
     _m_sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
+    //CCLOG("%s", FileUtils::getInstance()->fullPathForFilename("HelloWorld.png").data());
+    
     // add the _m_sprite as a child to this layer
     this->addChild(_m_sprite, 0);
     
@@ -259,7 +258,7 @@ void HelloWorld::update(float dt)
         else
         {
             _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
-            detectNumber( img, "model.xml");
+            detectNumber( img, FileUtils::getInstance()->fullPathForFilename("model.xml"));
         }
         
         cocos2d::Rect rect = cocos2d::Rect::ZERO;
