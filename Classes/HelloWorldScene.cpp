@@ -11,12 +11,13 @@
 #include <opencv2/imgproc.hpp>
 #include "opencv2/imgcodecs.hpp"
 #include <string>
+#include "DBGLayer.h"
 
 using namespace std;
 using namespace cv::ml;
 using namespace cv;
 USING_NS_CC;
-
+DBGLayer * _g_dbg_layer = nullptr;
 std::mutex HelloWorld::s_mtx_change_texture;
 bool HelloWorld::s_dirty = false;
 cv::Mat HelloWorld::img;
@@ -202,16 +203,24 @@ bool HelloWorld::init()
     
     // position the _m_sprite on the center of the screen
     _m_sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
     
     svm2 = SVM::create();
-    // vecData[i]=im;
-    cv::Mat res;
-    
-    
     svm2 = svm2->load(FileUtils::getInstance()->fullPathForFilename("model.xml"));
     CCASSERT(svm2, "cant load xml");
     
+    _g_dbg_layer = DBGLayer::create();
+    _g_dbg_layer->setColor(cocos2d::Color3B::GREEN);
+    _g_dbg_layer->setDuration(5.f);
+    _g_dbg_layer->setScale(0.75f);
+    addChild(_g_dbg_layer,0x1000,0x1000);
+    try
+    {
+        *_g_dbg_layer << (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")));
+    }
+    catch (const std::exception &e)
+    {
+        *_g_dbg_layer << std::string("ERROR") + std::string(e.what());
+    }
     
     //CCLOG("%s", FileUtils::getInstance()->fullPathForFilename("HelloWorld.png").data());
     
