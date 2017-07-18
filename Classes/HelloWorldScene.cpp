@@ -26,10 +26,7 @@ bool _l_running = true;
 // comparison function object
 
 
-#define SO_THREAD     4
-
-
-const double median(cv::Mat& channel)
+double median( cv::Mat channel )
 {
     double m = (channel.rows*channel.cols) / 2;
     int bin = 0;
@@ -41,12 +38,12 @@ const double median(cv::Mat& channel)
     bool uniform = true;
     bool accumulate = false;
     cv::Mat hist;
-    cv::calcHist(&channel, 1, 0, cv::Mat(), hist, 1, &histSize, &histRange, uniform, accumulate);
+    cv::calcHist( &channel, 1, 0, cv::Mat(), hist, 1, &histSize, &histRange, uniform, accumulate );
     
-    for (int i = 0; i < histSize && med < 0.0; ++i)
+    for ( int i = 0; i < histSize && med < 0.0; ++i )
     {
-        bin += cvRound(hist.at< float >(i));
-        if (bin > m && med < 0.0)
+        bin += cvRound( hist.at< float >( i ) );
+        if ( bin > m && med < 0.0 )
             med = i;
     }
     
@@ -54,8 +51,8 @@ const double median(cv::Mat& channel)
 }
 
 
-void detect()
-{
+string detectNumber(Mat img, char * path2) {
+    
     while (_l_running)
     {
         _l_running = false;
@@ -63,138 +60,93 @@ void detect()
     {
         HelloWorld::s_dirty = false;
         std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
-        Mat img1;
-        HelloWorld::img.copyTo(img1);
-            if (HelloWorld::img.cols>2000 || HelloWorld::img.rows>2000){
-                resize(HelloWorld::img, img1, cvSize(HelloWorld::img.cols / 2, HelloWorld::img.rows / 2), CV_INTER_LINEAR);
-                
-            }
-            if (HelloWorld::img.cols>3000 || HelloWorld::img.rows>3000){
-                resize(HelloWorld::img, img1, cvSize(HelloWorld::img.cols / 4, HelloWorld::img.rows / 4), CV_INTER_LINEAR);
-                
-            }
-            Mat imgx;
-            img1.copyTo(imgx);
-            cvtColor(imgx, imgx, CV_RGB2GRAY);
-            Mat img2;
+    Mat imgx;
+    img.copyTo(imgx);
+    cvtColor(imgx, imgx, CV_RGB2GRAY);
+    Mat img2;
+    
+    bilateralFilter(imgx,img2,11, 13, 13);
+    double sigma =0.33;
+    double v =median(img2);
+    double lower= int(MAX(0,(1.0-sigma)*v));
+    double upper= int(MIN(255,(1.0+sigma)*v));
+    Mat edged;
+    Canny(img2,edged,lower,upper);
+    Mat copy;
+    vector<vector<cv::Point> > contours;
+    vector<Vec4i> hierarchy;
+    vector<int> myvector;
+    findContours( edged, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE );
+    Mat cr;
+    //std::sort(contours1.begin(), contours1.end(),compareContourAreas);
+    cv::Mat crop(100, 784, CV_32FC1);
+    int dem=0;
+    for (int i = 0; i < contours.size(); i++){
+        int peri=cv::arcLength(contours.at(i), true);
+        vector<cv::Point> approx ;
+        approxPolyDP(contours.at(i),approx,0.02*peri,true);
+        Mat imgx2;
+        Vec<int,4> hi = hierarchy.at(i);
+        cv::Rect r= boundingRect(contours.at(i));
+        
+        if(approx.size()==4&& hi[3]!=-1&& r.height>28){
+            int child_idx= hi[2];
+            vector<cv::Point> child_c= contours.at(child_idx);
+            cv::Rect r1= boundingRect(child_c);
             
-            bilateralFilter(imgx, img2, 11, 13, 13);
-            double sigma = 0.33;
-            double v = median(img2);
-            double lower = int(MAX(0, (1.0 - sigma)*v));
-            double upper = int(MIN(255, (1.0 + sigma)*v));
-            Mat edged;
-            Canny(img2, edged, lower, upper);
-            Mat copy;
-            vector<vector<cv::Point> > contours;
-            vector<Vec4i> hierarchy;
-            vector<int> myvector;
-            findContours(edged, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-            Mat cr;
-            //std::sort(contours1.begin(), contours1.end(),compareContourAreas);
-            cv::Mat crop(1, 784, CV_32FC1);
+            Mat croppedImage;
+            Mat ROI(img, r1);
+            ROI.copyTo(cr);
             
             
-            cv::Ptr<SVM> svm2 = SVM::create();
+            Mat croop;
+            cv::resize(cr, croop, CvSize(28,28), 0, 0, CV_INTER_LINEAR);
+            Mat bina;
+            cvtColor(croop,bina,CV_RGB2GRAY);
+            cv::threshold(bina, bina,200,255,THRESH_BINARY_INV );
             
-            svm2 = Algorithm::load<SVM>("model.xml");// duong dan den file model model.xml
-            for (int i = 0; i < contours.size(); i++)
-            {
-                int peri = cv::arcLength(contours.at(i), true);
-                vector<cv::Point> approx;
-                approxPolyDP(contours.at(i), approx, 0.02*peri, true);
-                Mat imgx2;
-                Vec<int, 4> hi = hierarchy.at(i);
-                cv::Rect r = boundingRect(contours.at(i));
-                
-                if (approx.size() == 4 && hi[3] != -1 && r.height>28)
-                {
-                    int child_idx = hi[2];
-                    vector<cv::Point> child_c = contours.at(child_idx);
-                    cv::Rect r1 = boundingRect(child_c);
+            int ii = 0;
+            for (int x = 0; x<bina.rows; x++) {
+                for (int y = 0; y<bina.cols; y++) {
+                    crop.at<float>(dem, ii++) = (float)bina.at<uchar>(x, y) ;//- 255.0/2)/255.0;
+                    //cout << data.at<double>(i, x * 28 + y) << "---" << i << "---" << (x * 28 + y) << endl;
                     
-                    Mat croppedImage;
-                    Mat ROI(img1, r1);
-                    ROI.copyTo(cr);
                     
-                    Mat croop;
-                    cv::resize(cr, croop, CvSize(28, 28), 0, 0, CV_INTER_LINEAR);
-                    Mat bina;
-                    cvtColor(croop, bina, CV_RGB2GRAY);
-                    cv::threshold(bina, bina, 200, 255, THRESH_BINARY_INV);
-                    //imshow("hh", bina);
-                    //waitKey();
-                    int ii = 0;
-                    for (int x = 0; x<bina.rows; x++)
-                    {
-                        for (int y = 0; y<bina.cols; y++)
-                        {
-                            crop.at<float>(1, ii++) = (float)bina.at<uchar>(x, y);//- 255.0/2)/255.0;
-                            //cout << data.at<double>(i, x * 28 + y) << "---" << i << "---" << (x * 28 + y) << endl;
-                            
-                            
-                        }
-                    }
-                    cv::Mat res;
-                    svm2->predict(crop, res);
-                    cout << res << endl;
                 }
-                
             }
+            dem++;
         }
-    }
-}
-
-Mat equalizeBGRA(const Mat img)
-{
-    Mat res(img.size(), img.type());
-    Mat imgB(img.size(), CV_8UC1);
-    Mat imgG(img.size(), CV_8UC1);
-    Mat imgR(img.size(), CV_8UC1);
-    Vec4b pixel;
-    
-    if (img.channels() != 4)
-    {
-        cout << "ERROR: image input is not a BGRA image!" << endl;
-        return Mat();
+        
     }
     
-    for (int r = 0; r < img.rows; r++)
-    {
-        for (int c = 0; c < img.cols; c++)
-        {
-            pixel = img.at<Vec4b>(r, c);
-            imgB.at<uchar>(r, c) = pixel[0];
-            imgG.at<uchar>(r, c) = pixel[1];
-            imgR.at<uchar>(r, c) = pixel[2];
-        }
+    
+    
+    cv::Ptr<SVM> svm2 = SVM::create();
+    
+    svm2 = Algorithm::load<SVM>(path2);
+    
+    
+    // vecData[i]=im;
+    cv::Mat res;
+    svm2->predict(crop, res);
+    int i=0;
+    //
+    std::ostringstream ss;
+    while(i< dem){
+        
+        float result=res.at<float>(i);
+        
+        ss << result << " ";
+        
+        
+        i++;
     }
+    //ss << res.cols << " ";
+    std::string s(ss.str());
     
-    equalizeHist(imgB, imgB);
-    equalizeHist(imgG, imgG);
-    equalizeHist(imgR, imgR);
-    
-    for (int r = 0; r < img.rows; r++)
-    {
-        for (int c = 0; c < img.cols; c++)
-        {
-            pixel = Vec4b(imgB.at<uchar>(r, c), imgG.at<uchar>(r, c), imgR.at<uchar>(r, c), img.at<Vec4b>(r, c)[3]);
-            res.at<Vec4b>(r, c) = pixel;
-        }
+    return s.c_str();
     }
-    
-    return res;
-}
-
-vector<cv::Point> contoursConvexHull(vector<vector<cv::Point>> contours)
-{
-    vector<cv::Point> result;
-    vector<cv::Point> pts;
-    for (size_t i = 0; i< contours.size(); i++)
-        for (size_t j = 0; j< contours[i].size(); j++)
-            pts.push_back(contours[i][j]);
-    convexHull(pts, result);
-    return result;
+    }
 }
 
 Scene* HelloWorld::createScene()
@@ -248,7 +200,7 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label, 1);
     
-    detect();
+    //detect();
     
     // add "HelloWorld" splash screen"
     //_m_sprite = Sprite::create("HelloWorld.png");
@@ -262,7 +214,8 @@ bool HelloWorld::init()
     // add the _m_sprite as a child to this layer
     this->addChild(_m_sprite, 0);
     
-
+    detectNumber( img, "model.xml");
+    
     scheduleUpdate();
     
     return true;
@@ -303,7 +256,6 @@ void HelloWorld::update(float dt)
         {
             _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
             
-
         }
         
         cocos2d::Rect rect = cocos2d::Rect::ZERO;
