@@ -208,19 +208,19 @@ bool HelloWorld::init()
     svm2 = svm2->load(FileUtils::getInstance()->fullPathForFilename("model.xml"));
     CCASSERT(svm2, "cant load xml");
     
-    _g_dbg_layer = DBGLayer::create();
-    _g_dbg_layer->setColor(cocos2d::Color3B::GREEN);
-    _g_dbg_layer->setDuration(5.f);
-    _g_dbg_layer->setScale(0.75f);
-    addChild(_g_dbg_layer,0x1000,0x1000);
-    try
-    {
-        *_g_dbg_layer << (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")));
-    }
-    catch (const std::exception &e)
-    {
-        *_g_dbg_layer << std::string("ERROR") + std::string(e.what());
-    }
+    // _g_dbg_layer = DBGLayer::create();
+    // _g_dbg_layer->setColor(cocos2d::Color3B::GREEN);
+    // _g_dbg_layer->setDuration(5.f);
+    // _g_dbg_layer->setScale(0.75f);
+    // addChild(_g_dbg_layer,0x1000,0x1000);
+    // try
+    // {
+    //     *_g_dbg_layer << (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")));
+    // }
+    // catch (const std::exception &e)
+    // {
+    //     *_g_dbg_layer << std::string("ERROR") + std::string(e.what());
+    // }
     
     //CCLOG("%s", FileUtils::getInstance()->fullPathForFilename("HelloWorld.png").data());
     
@@ -268,7 +268,20 @@ void HelloWorld::update(float dt)
         else
         {
             _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
-            detectNumber( img, FileUtils::getInstance()->fullPathForFilename("model.xml"));
+            //detectNumber( img, FileUtils::getInstance()->fullPathForFilename("model.xml"));
+             _g_dbg_layer = DBGLayer::create();
+            _g_dbg_layer->setColor(cocos2d::Color3B::GREEN);
+            _g_dbg_layer->setDuration(5.f);
+            _g_dbg_layer->setScale(0.75f);
+            addChild(_g_dbg_layer,0x1000,0x1000);
+            try
+            {
+                *_g_dbg_layer << (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")));
+            }
+            catch (const std::exception &e)
+            {
+                *_g_dbg_layer << std::string("ERROR") + std::string(e.what());
+            }
         }
         
         cocos2d::Rect rect = cocos2d::Rect::ZERO;
