@@ -53,13 +53,13 @@ double median( cv::Mat channel )
 
 string detectNumber(Mat img, char * path2) {
     
-    while (_l_running)
-    {
-        _l_running = false;
-        if(HelloWorld::s_dirty)
-    {
-        HelloWorld::s_dirty = false;
-        std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
+    //while (_l_running)
+    //{
+        //_l_running = false;
+        //if(HelloWorld::s_dirty)
+    //{
+        //HelloWorld::s_dirty = false;
+        //std::lock_guard<std::mutex> lock(HelloWorld::s_mtx_change_texture);
     Mat imgx;
     img.copyTo(imgx);
     cvtColor(imgx, imgx, CV_RGB2GRAY);
@@ -128,7 +128,11 @@ string detectNumber(Mat img, char * path2) {
     
     // vecData[i]=im;
     cv::Mat res;
-    svm2->predict(crop, res);
+    
+    try { svm2->predict(crop, res); }
+    catch (std::exception const &e)
+    { CCLOG("predict err: %s", e.what());
+    }
     int i=0;
     //
     std::ostringstream ss;
@@ -145,8 +149,8 @@ string detectNumber(Mat img, char * path2) {
     std::string s(ss.str());
     
     return s.c_str();
-    }
-    }
+    //}
+    //}
 }
 
 Scene* HelloWorld::createScene()
@@ -214,7 +218,7 @@ bool HelloWorld::init()
     // add the _m_sprite as a child to this layer
     this->addChild(_m_sprite, 0);
     
-    detectNumber( img, "model.xml");
+    //detectNumber( img, "model.xml");
     
     scheduleUpdate();
     
@@ -255,7 +259,7 @@ void HelloWorld::update(float dt)
         else
         {
             _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
-            
+            detectNumber( img, "model.xml");
         }
         
         cocos2d::Rect rect = cocos2d::Rect::ZERO;
