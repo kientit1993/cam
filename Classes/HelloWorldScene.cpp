@@ -20,7 +20,7 @@ USING_NS_CC;
 std::mutex HelloWorld::s_mtx_change_texture;
 bool HelloWorld::s_dirty = false;
 cv::Mat HelloWorld::img;
-
+cv::Ptr<SVM> svm2;
 bool _l_running = true;
 
 // comparison function object
@@ -112,16 +112,16 @@ string detectNumber(const Mat &img, const std::string &path2) {
         
     }
     
-    cv::Ptr<SVM> svm2 = SVM::create();
+    //cv::Ptr<SVM> svm2 = SVM::create();
     // vecData[i]=im;
     cv::Mat res;
     
-    svm2 = svm2->load(path2);
-    CCASSERT(svm2, "can not load xml file");
+
+    //svm2 = svm2->load(path2);
+    //CCASSERT(svm2, "cant load xml");
     svm2->predict(crop, res);
-
-
-    int i=0;
+        
+        int i=0;
     //
     std::ostringstream ss;
     while(i< dem){
@@ -135,7 +135,7 @@ string detectNumber(const Mat &img, const std::string &path2) {
     }
     //ss << res.cols << " ";
     std::string s(ss.str());
-    
+    printf("%s", s.c_str());
     return s.c_str();
 }
 
@@ -198,9 +198,21 @@ bool HelloWorld::init()
 
     _m_sprite = Sprite::create("HelloWorld.png");
     
+    
+    
     // position the _m_sprite on the center of the screen
     _m_sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
+    
+    svm2 = SVM::create();
+    // vecData[i]=im;
+    cv::Mat res;
+    
+    
+    svm2 = svm2->load(FileUtils::getInstance()->fullPathForFilename("model.xml"));
+    CCASSERT(svm2, "cant load xml");
+    
+    
     //CCLOG("%s", FileUtils::getInstance()->fullPathForFilename("HelloWorld.png").data());
     
     // add the _m_sprite as a child to this layer
