@@ -24,6 +24,8 @@ cv::Mat HelloWorld::img;
 cv::Ptr<SVM> svm2;
 bool _l_running = true;
 
+
+
 // comparison function object
 
 
@@ -52,7 +54,7 @@ double median( cv::Mat channel )
 }
 
 
-string detectNumber(const Mat &img, const std::string &path2) {
+string HelloWorld::detectNumber(const Mat &img, const std::string &path2) {
     
     Mat imgx;
     img.copyTo(imgx);
@@ -117,27 +119,36 @@ string detectNumber(const Mat &img, const std::string &path2) {
     // vecData[i]=im;
     cv::Mat res;
     
-
-    //svm2 = svm2->load(path2);
+        //svm2 = svm2->load(path2);
     //CCASSERT(svm2, "cant load xml");
     svm2->predict(crop, res);
         
         int i=0;
-    //
+    std::vector<int8_t> result;
+    //int result;
     std::ostringstream ss;
+    
     while(i< dem){
         
-        float result=res.at<float>(i);
+        result.push_back(res.at<float>(i));
         
-        ss << result << " ";
+        ss << result[i] << " ";
+        //CCLabelTTF *kien;
+        this->removeChildByTag(1);
+        auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+        std::string s(ss.str());
+    
+        label->setString(std::to_string(result[i]));
+        label->setTag(1);
+        label->setPosition(300 , 50);
+        this->addChild(label);
         
-        
+        printf("%d", result[i]);
+        printf("string:%s", s.c_str());
         i++;
     }
-    //ss << res.cols << " ";
-    std::string s(ss.str());
-    printf("%s", s.c_str());
-    return s.c_str();
+    
+    //return s.c_str();
 }
 
 Scene* HelloWorld::createScene()
@@ -182,14 +193,14 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-    auto label = Label::createWithTTF("demos!", "fonts/Marker Felt.ttf", 24);
+    /*auto label = Label::createWithTTF("demos!", "fonts/Marker Felt.ttf", 24);
 
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
 
     // add the label as a child to this layer
-    this->addChild(label, 1);
+    this->addChild(label, 1);*/
     
     //detect();
     
@@ -200,26 +211,30 @@ bool HelloWorld::init()
     _m_sprite = Sprite::create("HelloWorld.png");
     
     
-    
-    // position the _m_sprite on the center of the screen
-    _m_sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    
     svm2 = SVM::create();
     svm2 = svm2->load(FileUtils::getInstance()->fullPathForFilename("model.xml"));
     CCASSERT(svm2, "cant load xml");
+    // position the _m_sprite on the center of the screen
+    _m_sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
-    _g_dbg_layer = DBGLayer::create();
-    _g_dbg_layer->setColor(cocos2d::Color3B::GREEN);
-    _g_dbg_layer->setDuration(5.f);
-    _g_dbg_layer->setScale(0.75f);
-    addChild(_g_dbg_layer,0x1000,0x1000);
-   
+    
+    //_g_dbg_layer = DBGLayer::create();
+    //_g_dbg_layer->setColor(cocos2d::Color3B::RED);
+    //_g_dbg_layer->setDuration(10.0f);
+    //_g_dbg_layer->setScale(0.75f);
+    //addChild(_g_dbg_layer,0x1000,0x1000);
+    
+    
+    
+    //CCLOG("%s", FileUtils::getInstance()->fullPathForFilename("HelloWorld.png").data());
     
     // add the _m_sprite as a child to this layer
-    this->addChild(_m_sprite, 0);
-     
-    scheduleUpdate();
+    //this->addChild(_m_sprite, 0);
     
+    //detectNumber( img, "model.xml");
+    
+    //scheduleUpdate();
+    schedule(schedule_selector(HelloWorld::update), 1.0f);
     return true;
 }
 
@@ -236,8 +251,9 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 void HelloWorld::update(float dt)
 {
-    cocos2d::Scene::update(dt);
-
+    //scheduleOnce(schedule_selector(cocos2d::Scene::update), 1.0f);
+    //cocos2d::Scene::update(dt);
+    printf("Kien");
     if(s_dirty)
     {
         s_dirty = false;
@@ -252,24 +268,45 @@ void HelloWorld::update(float dt)
                                        img.rows,
                                        cocos2d::Size(img.cols, img.rows));
             
-            _m_sprite->setTexture(_m_texture2d);
+            //_m_sprite->setTexture(_m_texture2d);
+            
         }
         else
         {
-            _m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
+            //_m_sprite->getTexture()->updateWithData(img.data, 0, 0, img.cols, img.rows);
+
             try
             {
-                *_g_dbg_layer << (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")));
+                //if (detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml")) != NULL)
+                
+                //std::string s(ss.str());
+                /*
+                float delay = 1.0f;
+                auto delayaction = DelayTime::create(delay);
+                auto func = CallFunc::create([]()
+                {
+                    detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml"));
+                });
+                 */
+                detectNumber(img,FileUtils::getInstance()->fullPathForFilename("model.xml"));
+                //this -> runAction(Sequence::create(delayaction, func, NULL));
+                    //*_g_dbg_layer << "Kien";
+                //std::stringstream kien;
+                //
+                
+                
+            
             }
             catch (const std::exception &e)
             {
-                *_g_dbg_layer << std::string("ERROR") + std::string(e.what());
+                //*_g_dbg_layer << std::string("ERROR") + std::string(e.what());
             }
+
         }
         
-        cocos2d::Rect rect = cocos2d::Rect::ZERO;
-        rect.size = _m_sprite->getTexture()->getContentSize();
-        _m_sprite->setTextureRect(rect);
-        _m_sprite->setRotation(-90);
+                //cocos2d::Rect rect = cocos2d::Rect::ZERO;
+        //rect.size = _m_sprite->getTexture()->getContentSize();
+        //_m_sprite->setTextureRect(rect);
+        //_m_sprite->setRotation(-90);
     }
 }
