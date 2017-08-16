@@ -25,6 +25,8 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
     
+    cv::Mat detectNumber(cv::Mat img1, char *path, std::string result);
+    
     static std::mutex s_mtx_change_texture;
     cocos2d::Sprite *_m_sprite;
     cocos2d::Texture2D *_m_texture2d;
